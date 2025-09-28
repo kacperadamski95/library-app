@@ -1,0 +1,27 @@
+<div class="library-container">
+  <section class="add-book-section">
+    <h3>Dodaj nową książkę</h3>
+    <form (ngSubmit)="onAddBookSubmit()">
+      <div class="form-grid">
+        <input type="text" [(ngModel)]="newBook.title" name="title" placeholder="Tytuł" required>
+        <input type="text" [(ngModel)]="newBook.author" name="author" placeholder="Autor" required>
+        <input type="text" [(ngModel)]="newBook.publicationDate" name="publicationDate" placeholder="Data wydania">
+        <input type="text" [(ngModel)]="newBook.shelfLocation" name="shelfLocation" placeholder="Lokalizacja na półce">
+      </div>
+      <button type="submit">Dodaj książkę</button>
+    </form>
+  </section>
+
+  <section class="book-list-section">
+    <h3>Książki w bibliotece</h3>
+    @if (loading$ | async) {
+      <p>Ładowanie książek...</p>
+    } @else {
+      <app-book-list 
+        [books]="books$ | async" 
+        (borrow)="onBorrowBook($event)"
+        (return)="onReturnBook($event)">
+      </app-book-list>
+    }
+  </section>
+</div>

@@ -1,0 +1,113 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 150px); /* Wypełnia ekran, zostawiając miejsce na header */
+  padding: 1rem;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  border-radius: 12px;
+  background-color: var(--card-background);
+  box-shadow: 0 10px 25px var(--shadow-color);
+  text-align: center;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  box-sizing: border-box;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus {
+  border-color: var(--primary-color);
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(58, 123, 213, 0.25);
+}
+
+button {
+  width: 100%;
+  padding: 0.9rem;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: bold;
+  /* Atrakcyjny gradient dla przycisku */
+  background-image: linear-gradient(to right, var(--primary-color) 0%, var(--secondary-color) 100%);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px 0 rgba(58, 123, 213, 0.5);
+}
+
+button:hover {
+  transform: translateY(-2px); /* Lekkie "uniesienie" przycisku */
+  box-shadow: 0 6px 20px 0 rgba(58, 123, 213, 0.6);
+}
+
+.error-message {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+p {
+  margin-top: 2rem;
+  color: #6c757d;
+}
+
+p a {
+  color: var(--primary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+p a:hover {
+  text-decoration: underline;
+  color: var(--secondary-color);
+}
+
+@media (min-width: 768px) {
+  :host {
+    min-height: calc(100vh - 150px);
+  }
+
+  .auth-container {
+    padding: 2.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+}

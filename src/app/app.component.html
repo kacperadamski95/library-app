@@ -1,0 +1,13 @@
+<header>
+  <h1>Moja Biblioteka</h1>
+  <nav>
+    @if (authService.isLoggedIn()) {
+      <p>Witaj, {{ authService.currentUser()?.username }}!</p>
+      <button (click)="logout()">Wyloguj</button>
+    }
+  </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

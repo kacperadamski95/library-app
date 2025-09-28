@@ -1,0 +1,115 @@
+/* Domyślny styl (Mobile First) - brak tabeli, układ karciany */
+.books-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.book-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.book-card-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.book-card-row:last-child {
+  border-bottom: none;
+}
+
+.book-card-label {
+  font-weight: 600;
+  color: #6c757d;
+  padding-right: 1rem; /* Dodajemy odstęp, żeby tekst się nie zlewał */
+}
+
+.book-card-value {
+  text-align: right;
+  word-break: break-word; /* Zapobiega "wylewaniu się" długich tekstów */
+}
+
+.book-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+/* Ukrywamy tradycyjną tabelę na małych ekranach */
+.books-table {
+  display: none;
+}
+
+/* ================================================= */
+/* ===  WSPÓLNE, POPRAWIONE STYLE DLA PRZYCISKÓW === */
+/* ================================================= */
+.action-btn {
+  padding: 0.5rem 1rem;
+  margin: 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--action-text-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Tutaj przypisujemy konkretne kolory */
+.action-btn[data-action="borrow"] {
+  background-color: var(--action-borrow-bg);
+}
+
+.action-btn[data-action="return"] {
+  background-color: var(--action-return-bg);
+}
+
+
+/* Media Query dla tabletów i większych ekranów */
+@media (min-width: 768px) {
+  /* Pokazujemy tabelę, a ukrywamy układ karciany */
+  .books-table {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  .books-list {
+    display: none;
+  }
+
+  /* Style dla tabeli (te, które mieliśmy wcześniej) */
+  .books-table th, .books-table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .books-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+  
+  .books-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Wspólne style dla statusów */
+.status-available { color: var(--action-return-bg); font-weight: bold; }
+.status-borrowed { color: var(--action-borrow-bg); font-weight: bold; }

@@ -1,1 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+/* Definiujemy globalne zmienne kolorów i czcionek - to BARDZO dobra praktyka! */
+:root {
+  --primary-color: #3a7bd5;
+  --secondary-color: #00d2ff;
+  --background-start: #e9f0f5;
+  --background-end: #d1e0ec;
+  --text-color: #2c3e50;
+  --card-background: rgba(255, 255, 255, 0.95);
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+  --action-borrow-bg: #fd7e14;   /* Pomarańczowy, kolor ostrzegawczy/neutralny */
+  --action-return-bg: #28a745;   /* Zielony, kolor sukcesu */
+  --action-text-color: #ffffff;  /* Biały tekst dla obu */
+}
+
+html {
+  height: 100%;
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--text-color);
+  background-color: var(--background-start);
+  /* Subtelny, elegancki gradient tła */
+  background-image: linear-gradient(to top, var(--background-start) 0%, var(--background-end) 100%);
+  min-height: 100%;
+}
+
+/* Ujednolicenie box-sizing dla wszystkich elementów */
+* {
+  box-sizing: border-box;
+}
