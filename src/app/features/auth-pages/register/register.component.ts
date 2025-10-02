@@ -14,6 +14,9 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
+  isLoginView = false;
+
+  // również do przerobienia na ReactiveForms
   username = '';
   password = '';
   errorMessage: string | null = null;

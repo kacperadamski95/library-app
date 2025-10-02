@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { FormsModule } from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule} from '@angular/forms';
 import { BookListComponent } from '../book-list/book-list.component';
 import { BooksActions } from '../../../store/books/books.actions';
 import { selectAllBooks, selectBooksLoading } from '../../../store/books/books.selectors';
@@ -11,18 +11,24 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-library',
   standalone: true,
-  imports: [FormsModule, BookListComponent, CommonModule], // Importujemy FormsModule i komponent dziecka
+  imports: [FormsModule, BookListComponent, CommonModule, ReactiveFormsModule], // Importujemy FormsModule i komponent dziecka
   templateUrl: './library.component.html',
   styleUrl: './library.component.css'
 })
 export class LibraryComponent implements OnInit {
   private store = inject(Store);
   private authService = inject(AuthService);
+  private  fb = inject(NonNullableFormBuilder);
 
   // Pobieramy dane ze store za pomocą selektorów ($ - oznacza, że jest strumieniem danych)
+  // z ngrx można zaciągnąć selector typ signal: selectSignal() aby ograniczać operacje na Observable
+  books = this.store.selectSignal(selectAllBooks);
+  isLoading = this.store.selectSignal(selectBooksLoading);
+
   books$ = this.store.select(selectAllBooks);
   loading$ = this.store.select(selectBooksLoading);
-  
+
+  // zdecydowanie lepiej w takiej sytuacji korzystać z formularzy reaktywnych
   // Dane dla nowego formularza książki
   newBook = {
     title: '',
@@ -31,33 +37,77 @@ export class LibraryComponent implements OnInit {
     shelfLocation: ''
   };
 
+  newBookFormGroup = this.createFormGroup();
+
   ngOnInit(): void {
     // Przy inicjalizacji komponentu, wysyłamy akcję, aby załadować książki
-    this.store.dispatch(BooksActions.loadBooks());
+
+    // co do zasady lepiej nie implementować tutaj czystego kodu, a wywoływać metody
+    // czyli przenieść poniższy dispatch np do metody prywatnej init i ją tutaj wywołać
+    this.init();
   }
 
   onAddBookSubmit(): void {
     // Prosta walidacja
-    if (!this.newBook.title || !this.newBook.author) {
+   /* if (!this.newBook.title || !this.newBook.author) {
+      alert('Tytuł i autor są wymagani!');
+      return;
+    }*/
+
+    const bookData = this.newBookFormGroup.getRawValue();
+
+    if (!bookData.title || !bookData.author) {
+      // lepiej zablokować przycisk aby użytkownik nie mógł wykonać akcji niż wyświetlać jakąś informacje przy tak prostym formularzu, jeżeli formularz jest złożony to wtedy można przez kliknięcie podświetlić wymagane pola
       alert('Tytuł i autor są wymagani!');
       return;
     }
-    
+
     // Wysyłamy akcję dodania książki z danymi z formularza
-    this.store.dispatch(BooksActions.addBook({ bookData: this.newBook }));
+    this.store.dispatch(BooksActions.addBook({ bookData }));
 
     // Resetujemy formularz
-    this.newBook = { title: '', author: '', publicationDate: '', shelfLocation: '' };
+    //this.newBook = { title: '', author: '', publicationDate: '', shelfLocation: '' };
+    this.newBookFormGroup.reset();
   }
 
   onBorrowBook(bookId: string): void {
-    const currentUserId = this.authService.currentUser()?.id;
+    // pierdoła, ale dla lepszych praktyk można pisać rekurencyjnie
+
+    /*const currentUserId = this.authService.currentUser()?.id;
     if (currentUserId) {
       this.store.dispatch(BooksActions.borrowBook({ bookId, userId: currentUserId }));
+    }*/
+
+    const userId = this.authService.currentUser()?.id;
+
+    if (userId) {
+      this.store.dispatch(BooksActions.borrowBook({ bookId, userId }));
     }
   }
 
   onReturnBook(bookId: string): void {
     this.store.dispatch(BooksActions.returnBook({ bookId }));
+  }
+
+  private createFormGroup(): FormGroup<{
+    title: FormControl<string>,
+    author: FormControl<string>,
+    publicationDate: FormControl<string>,
+    shelfLocation: FormControl<string>,
+  }> {
+    return this.fb.group({
+      title: '',
+      author: '',
+      publicationDate: '',
+      shelfLocation: ''
+    })
+  }
+
+  private loadBooks(): void {
+    this.store.dispatch(BooksActions.loadBooks());
+  }
+
+  private init(): void {
+    this.loadBooks();
   }
 }

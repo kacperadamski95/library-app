@@ -4,6 +4,7 @@ import { initialBooksState } from './books.state';
 
 export const booksReducer = createReducer(
   initialBooksState,
+  // zmienne typu boolean dla lepszej czytelności pisać z prefiem: is/ has / can / should
   on(BooksActions.loadBooks, (state) => ({ ...state, loading: true })),
   on(BooksActions.loadBooksSuccess, (state, { books }) => ({
     ...state,
