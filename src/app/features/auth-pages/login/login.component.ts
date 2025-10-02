@@ -13,7 +13,8 @@ import { AuthService } from '../../../core/auth/auth.service';
 export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
-  
+
+  // ReactiveForms
   username = '';
   password = '';
   errorMessage: string | null = null;
@@ -29,3 +30,5 @@ export class LoginComponent {
     }
   }
 }
+
+// PS. Komponent Register i Login są bardzo podobne więc może to być jako jeden a logiką operować na podstawie flagi
