@@ -5,6 +5,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 export const BooksActions = createActionGroup({
   source: 'Books', // Źródło akcji
   events: {
+    // load books error powinienem dodać
     'Load Books': emptyProps(),
     'Load Books Success': props<{ books: Book[] }>(),
     'Load Books Fail': props<{error: HttpErrorResponse}>(),

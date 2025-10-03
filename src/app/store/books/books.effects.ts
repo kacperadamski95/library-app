@@ -16,6 +16,7 @@ export class BooksEffects {
   loadBooks$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BooksActions.loadBooks),
+      // tapresponse do obsłużenia pobieranych danych z backendu jest zalecany - ngrx -
       switchMap(() => {
         const state = this.storageService.loadState();
         const books = state?.books || [];
@@ -40,7 +41,7 @@ export class BooksEffects {
       ),
     { dispatch: false } // Ten efekt nie wysyła nowej akcji
   );
-  
+
   addBook$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BooksActions.addBook),

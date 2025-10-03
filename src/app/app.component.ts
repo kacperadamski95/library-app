@@ -4,10 +4,7 @@ import { AuthService } from './core/auth/auth.service';
 
 @Component({
   selector: 'app-root',
-  // standalone: true,
-  // w wersji v20 standalone jest domyślnie ustawiony na true
   imports: [RouterOutlet],
-  // male templatki mozna implementowac bezposrednio w komponencie (według własnych upodobań ;) )
   template: `
     <header>
       <h1>Moja Biblioteka</h1>
@@ -23,7 +20,6 @@ import { AuthService } from './core/auth/auth.service';
       <router-outlet></router-outlet>
     </main>
   `,
-  //templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {

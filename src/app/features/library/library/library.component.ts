@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import {FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import { BookListComponent } from '../book-list/book-list.component';
 import { BooksActions } from '../../../store/books/books.actions';
 import { selectAllBooks, selectBooksLoading } from '../../../store/books/books.selectors';
@@ -12,7 +12,35 @@ import { CommonModule } from '@angular/common';
   selector: 'app-library',
   standalone: true,
   imports: [FormsModule, BookListComponent, CommonModule, ReactiveFormsModule], // Importujemy FormsModule i komponent dziecka
-  templateUrl: './library.component.html',
+  template: `
+    <div class="library-container">
+      <section class="add-book-section">
+        <h3>Dodaj nową książkę</h3>
+        <form [formGroup]="newBookFormGroup" (ngSubmit)="onAddBookSubmit()">
+          <div class="form-grid">
+            <input type="text" formControlName="title" name="title" placeholder="Tytuł">
+            <input type="text" formControlName="author" name="author" placeholder="Autor">
+            <input type="text" formControlName="publicationDate" name="publicationDate" placeholder="Data wydania">
+            <input type="text" formControlName="shelfLocation" name="shelfLocation" placeholder="Lokalizacja na półce">
+          </div>
+          <button [disabled]="newBookFormGroup.invalid" type="submit">Dodaj książkę</button>
+        </form>
+      </section>
+
+      <section class="book-list-section">
+        <h3>Książki w bibliotece</h3>
+        @if (isLoading()) {
+          <p>Ładowanie książek...</p>
+        } @else {
+          <app-book-list
+            [booksSignal]="books()"
+            (borrowOutput)="onBorrowBook($event)"
+            (returnOutput)="onReturnBook($event)">
+          </app-book-list>
+        }
+      </section>
+    </div>
+`,
   styleUrl: './library.component.css'
 })
 export class LibraryComponent implements OnInit {
@@ -25,23 +53,19 @@ export class LibraryComponent implements OnInit {
   books = this.store.selectSignal(selectAllBooks);
   isLoading = this.store.selectSignal(selectBooksLoading);
 
-  books$ = this.store.select(selectAllBooks);
-  loading$ = this.store.select(selectBooksLoading);
-
   // zdecydowanie lepiej w takiej sytuacji korzystać z formularzy reaktywnych
   // Dane dla nowego formularza książki
-  newBook = {
-    title: '',
-    author: '',
-    publicationDate: '',
-    shelfLocation: ''
-  };
+  // newBook = {
+  //   title: '',
+  //   author: '',
+  //   publicationDate: '',
+  //   shelfLocation: ''
+  // };
 
   newBookFormGroup = this.createFormGroup();
 
   ngOnInit(): void {
     // Przy inicjalizacji komponentu, wysyłamy akcję, aby załadować książki
-
     // co do zasady lepiej nie implementować tutaj czystego kodu, a wywoływać metody
     // czyli przenieść poniższy dispatch np do metody prywatnej init i ją tutaj wywołać
     this.init();
@@ -53,14 +77,14 @@ export class LibraryComponent implements OnInit {
       alert('Tytuł i autor są wymagani!');
       return;
     }*/
-
     const bookData = this.newBookFormGroup.getRawValue();
 
-    if (!bookData.title || !bookData.author) {
-      // lepiej zablokować przycisk aby użytkownik nie mógł wykonać akcji niż wyświetlać jakąś informacje przy tak prostym formularzu, jeżeli formularz jest złożony to wtedy można przez kliknięcie podświetlić wymagane pola
-      alert('Tytuł i autor są wymagani!');
-      return;
-    }
+    // if (!bookData.title || !bookData.author) {
+    //
+    //   // lepiej zablokować przycisk aby użytkownik nie mógł wykonać akcji niż wyświetlać jakąś informacje przy tak prostym formularzu, jeżeli formularz jest złożony to wtedy można przez kliknięcie podświetlić wymagane pola
+    //   alert('Tytuł i autor są wymagani!');
+    //   return;
+    // }
 
     // Wysyłamy akcję dodania książki z danymi z formularza
     this.store.dispatch(BooksActions.addBook({ bookData }));
@@ -79,7 +103,6 @@ export class LibraryComponent implements OnInit {
     }*/
 
     const userId = this.authService.currentUser()?.id;
-
     if (userId) {
       this.store.dispatch(BooksActions.borrowBook({ bookId, userId }));
     }
@@ -96,10 +119,10 @@ export class LibraryComponent implements OnInit {
     shelfLocation: FormControl<string>,
   }> {
     return this.fb.group({
-      title: '',
-      author: '',
-      publicationDate: '',
-      shelfLocation: ''
+      title: ['', Validators.required],
+      author: ['', Validators.required],
+      publicationDate: ['', Validators.required],
+      shelfLocation: ['', Validators.required]
     })
   }
 

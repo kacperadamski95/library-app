@@ -13,19 +13,10 @@ import { BooksEffects } from './store/books/books.effects';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    
+
     // Konfiguracja NgRx
     provideStore(), // Inicjalizuje Store
     provideState({ name: 'books', reducer: booksReducer }), // Rejestruje nasz "feature state"
     provideEffects([BooksEffects]), // Używamy standardowego dostawcy
-    
-    // Dodajemy narzędzia deweloperskie Redux DevTools
-    // provideStoreDevtools({
-    //   maxAge: 25, // Przechowuje ostatnie 25 stanów
-    //   logOnly: !isDevMode(), // Włącza pełne funkcje tylko w trybie deweloperskim
-    //   autoPause: true,
-    //   trace: false,
-    //   traceLimit: 75,
-    // }),
   ],
 };
