@@ -5,11 +5,11 @@ export const routes: Routes = [
   {
     path: 'login',
     // Używamy dynamicznego importu do leniwego ładowania komponentu
-    loadComponent: () => import('./features/auth-pages/login/login.component').then(c => c.LoginComponent),
+    loadComponent: () => import('./features/auth-pages/auth/auth.component').then(c => c.AuthComponent),
   },
   {
     path: 'register',
-    loadComponent: () => import('./features/auth-pages/register/register.component').then(c => c.RegisterComponent),
+    loadComponent: () => import('./features/auth-pages/auth/auth.component').then(c => c.AuthComponent),
   },
   {
     path: 'library',
