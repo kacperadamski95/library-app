@@ -4,14 +4,13 @@ import {FormControl, FormGroup, FormsModule, NonNullableFormBuilder, ReactiveFor
 import { BookListComponent } from '../book-list/book-list.component';
 import { BooksActions } from '../../../store/books/books.actions';
 import { selectAllBooks, selectBooksLoading } from '../../../store/books/books.selectors';
-import { Book } from '../../../core/models/book.model';
 import { AuthService } from '../../../core/auth/auth.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-library',
   standalone: true,
-  imports: [FormsModule, BookListComponent, CommonModule, ReactiveFormsModule], // Importujemy FormsModule i komponent dziecka
+  imports: [FormsModule, BookListComponent, CommonModule, ReactiveFormsModule],
   template: `
     <div class="library-container">
       <section class="add-book-section">
@@ -53,15 +52,6 @@ export class LibraryComponent implements OnInit {
   books = this.store.selectSignal(selectAllBooks);
   isLoading = this.store.selectSignal(selectBooksLoading);
 
-  // zdecydowanie lepiej w takiej sytuacji korzystać z formularzy reaktywnych
-  // Dane dla nowego formularza książki
-  // newBook = {
-  //   title: '',
-  //   author: '',
-  //   publicationDate: '',
-  //   shelfLocation: ''
-  // };
-
   newBookFormGroup = this.createFormGroup();
 
   ngOnInit(): void {
@@ -72,25 +62,12 @@ export class LibraryComponent implements OnInit {
   }
 
   onAddBookSubmit(): void {
-    // Prosta walidacja
-   /* if (!this.newBook.title || !this.newBook.author) {
-      alert('Tytuł i autor są wymagani!');
-      return;
-    }*/
     const bookData = this.newBookFormGroup.getRawValue();
-
-    // if (!bookData.title || !bookData.author) {
-    //
-    //   // lepiej zablokować przycisk aby użytkownik nie mógł wykonać akcji niż wyświetlać jakąś informacje przy tak prostym formularzu, jeżeli formularz jest złożony to wtedy można przez kliknięcie podświetlić wymagane pola
-    //   alert('Tytuł i autor są wymagani!');
-    //   return;
-    // }
 
     // Wysyłamy akcję dodania książki z danymi z formularza
     this.store.dispatch(BooksActions.addBook({ bookData }));
 
     // Resetujemy formularz
-    //this.newBook = { title: '', author: '', publicationDate: '', shelfLocation: '' };
     this.newBookFormGroup.reset();
   }
 
