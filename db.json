@@ -15,6 +15,31 @@
       "publicationDate": "1965",
       "shelfLocation": "B3",
       "borrowedByUserId": null
+    },
+    {
+      "id": "0181",
+      "title": "Wiedźmin 1",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2001",
+      "shelfLocation": "C1",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "e26f",
+      "title": "Wiedźmin 2",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2003",
+      "shelfLocation": "C2",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "ec08",
+      "title": "Wiedźmin 3",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2005",
+      "shelfLocation": "C3",
+      "borrowedByUserId": null
     }
-  ]
+  ],
+  "users": []
 }
