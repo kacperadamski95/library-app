@@ -1,0 +1,20 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "Władca Pierścieni",
+      "author": "J.R.R. Tolkien",
+      "publicationDate": "1954",
+      "shelfLocation": "A1",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "2",
+      "title": "Diuna",
+      "author": "Frank Herbert",
+      "publicationDate": "1965",
+      "shelfLocation": "B3",
+      "borrowedByUserId": null
+    }
+  ]
+}
