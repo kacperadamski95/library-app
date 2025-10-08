@@ -22,7 +22,7 @@
       "author": "Andrzej Sapkowski",
       "publicationDate": "2001",
       "shelfLocation": "C1",
-      "borrowedByUserId": null
+      "borrowedByUserId": "771b"
     },
     {
       "id": "e26f",
@@ -39,7 +39,39 @@
       "publicationDate": "2005",
       "shelfLocation": "C3",
       "borrowedByUserId": null
+    },
+    {
+      "id": "a0ec",
+      "title": "Wiedźmin 4",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2007",
+      "shelfLocation": "C4",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "d935",
+      "title": "Wiedźmin 5",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2008",
+      "shelfLocation": "C5",
+      "borrowedByUserId": null
     }
   ],
-  "users": []
+  "users": [
+    {
+      "id": "8fcc",
+      "username": "kacper adamski",
+      "password": "kacper"
+    },
+    {
+      "id": "771b",
+      "username": "adam malysz",
+      "password": "adam"
+    },
+    {
+      "id": "d3a5",
+      "username": "adam mickiewicz",
+      "password": "adam"
+    }
+  ]
 }

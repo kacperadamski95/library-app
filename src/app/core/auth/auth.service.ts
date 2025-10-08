@@ -1,65 +1,81 @@
-import {Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
-import { StorageService } from '../storage/storage.service';
+import { firstValueFrom } from 'rxjs';
+
+// Definiujemy URL do naszego API użytkowników
+const USERS_API_URL = 'http://localhost:3000/users';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  //private storageService = inject(StorageService);
-
-  // Sygnały do przechowywania stanu użytkowników i bieżącego logowania
-  allUsers = signal<User[]>([]);
+  // Sygnał aktualnie zalogowanego użytkownika
   currentUser = signal<User | null>(null);
-  // Sygnał obliczeniowy, który automatycznie zwraca true/false
+  // Sygnał obliczeniowy - czy ktoś jest zalogowany
   isLoggedIn = computed(() => !!this.currentUser());
 
-  constructor(private storageService: StorageService) {
-    this.loadUsersFromStorage();
+  private http = inject(HttpClient);
+  // Listę wszystkich użytkowników
+  private allUsers = signal<User[]>([]);
 
-    // Efekt, który automatycznie zapisuje listę użytkowników, gdy się zmieni
-    effect(() => {
-      const users = this.allUsers();
-      const currentState = this.storageService.loadState() || {};
-      this.storageService.saveState({ ...currentState, users });
-    });
+  constructor() {
+    // Na starcie serwisu od razu ładuje listę użytkowników z serwera
+    this.loadInitialUsers();
   }
 
-  register(username: string, password: string): boolean {
-
-    const userExists = this.allUsers().some(u => u.username === username);
-
-    if (userExists) {
+  // === METODY PUBLICZNE (API SERWISU) ===
+  //   Rejestruje nowego użytkownika w systemie
+  async register(username: string, password: string): Promise<boolean> {
+    // Sprawdzam, czy użytkownik o takiej nazwie już istnieje
+    if (this.allUsers().some(u => u.username === username)) {
+      console.error('Użytkownik o takiej nazwie już istnieje');
       return false;
     }
 
-    const newUser: User = {
-      id: crypto.randomUUID(),
-      username,
-      password
-    };
-    // Aktualizujemy sygnał, co automatycznie uruchomi efekt zapisu
-    this.allUsers.update(users => [...users, newUser]);
-    return true;
-  }
+    const newUser: Omit<User, 'id'> = { username, password };
 
-  login(username: string, password: string): boolean {
-    const user = this.allUsers().find(u => u.username === username && u.password === password);
-    if (user) {
-      this.currentUser.set(user);
+    try {
+      // Wysyłam żądanie POST i czekamy na odpowiedź z serwera
+      const addedUser = await firstValueFrom(this.http.post<User>(USERS_API_URL, newUser));
+      // Aktualizujemy nasz lokalny stan (sygnał) z listą użytkowników
+      this.allUsers.update(users => [...users, addedUser]);
+      return true;
+    } catch (error) {
+      console.error('Rejestracja użytkownika nie powiodła się, spróbuj ponownie później', error);
+      return false;
     }
-    // można po prostu zwrócić obecną wartość zmiennej niż na sztywno pisać true/ false
-    return !!user
   }
 
+
+   // Loguje użytkownika do systemu. True jeśli logowanie się powiodło, false w przeciwnym razie
+  async login(username: string, password: string): Promise<boolean> {
+    // Przed każdą próbą logowania, odświeżam listę użytkowników z serwera, aby mieć pewność, że pracuje na aktualnych danych
+    await this.loadInitialUsers();
+
+    const user = this.allUsers().find(u => u.username === username && u.password === password);
+
+    if (user) {
+      // Ustawiamy sygnał z bieżącym użytkownikiem
+      this.currentUser.set(user);
+      return true;
+    }
+    return false;
+  }
+
+   // Wylogowuje bieżącego użytkownika.
   logout(): void {
     this.currentUser.set(null);
   }
-
-  private loadUsersFromStorage() {
-    const state = this.storageService.loadState();
-    if (state && state.users) {
-      this.allUsers.set(state.users);
+  // === METODY PRYWATNE ===
+   // Prywatna metoda do pobierania listy wszystkich użytkowników z serwera i aktualizowania stanu w sygnale.
+  private async loadInitialUsers(): Promise<void> {
+    try {
+      const users = await firstValueFrom(this.http.get<User[]>(USERS_API_URL));
+      this.allUsers.set(users);
+    } catch (error) {
+      console.error('Nie udało się załadować listy użytkowników', error);
+      this.allUsers.set([]);
     }
   }
 }
