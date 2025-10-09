@@ -1,9 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookListComponent } from '../book-list/book-list.component';
 import { AuthService } from '../../../core/auth/auth.service';
 import { CommonModule } from '@angular/common';
-
 import { BooksStore } from '../../../store/books/books.store';
 
 @Component({
@@ -26,14 +25,14 @@ import { BooksStore } from '../../../store/books/books.store';
 
       <section class="book-list-section">
         <h3>Książki w bibliotece</h3>
-<!--          Aktualizacja szablonu do bezpośredniego użycia sygnałów ze store-->
-        @if (store.loading()) {
+
+        @if (isLoading()) {
           <p>Ładowanie książek...</p>
-        } @else if (store.error()) {
-          <p class="error-message">{{ store.error() }}</p>
+        } @else if (error()) {
+          <p class="error-message">{{ error() }}</p>
         } @else {
           <app-book-list
-            [booksSignal]="store.books()"
+            [booksSignal]="books()"
             (borrowOutput)="onBorrowBook($event)"
             (returnOutput)="onReturnBook($event)">
           </app-book-list>
@@ -43,40 +42,38 @@ import { BooksStore } from '../../../store/books/books.store';
   `,
   styleUrl: './library.component.css'
 })
-export class LibraryComponent implements OnInit {
-  // Wstrzykujemy nowy BooksStore zamiast starego Store
-  store = inject(BooksStore);
-
+export class LibraryComponent {
+  private booksStore = inject(BooksStore);
   private authService = inject(AuthService);
   private fb = inject(NonNullableFormBuilder);
 
-  newBookFormGroup = this.createFormGroup();
+  books = this.booksStore.books;
+  isLoading = this.booksStore.isLoading;
+  error = this.booksStore.error;
 
-  ngOnInit(): void {
-    this.init();
-  }
+  newBookFormGroup = this.createFormGroup();
 
   onAddBookSubmit(): void {
     const bookData = this.newBookFormGroup.getRawValue();
 
-    // Zamiast dispatch(action), wywołujemy metodę na store
-    this.store.addBook(bookData);
+    this.booksStore.addBook({bookData});
 
     this.newBookFormGroup.reset();
   }
 
   onBorrowBook(bookId: string): void {
+    // TODO: To do wyniesienia do authStore.
     const userId = this.authService.currentUser()?.id;
+
     if (userId) {
-      this.store.borrowBook(bookId, userId);
+      this.booksStore.borrowBook({bookId, userId});
     }
   }
 
   onReturnBook(bookId: string): void {
-    this.store.returnBook(bookId);
+    this.booksStore.returnBook({bookId});
   }
 
-  // Metody prywatne pozostają, ale teraz wywołują metody ze store
   private createFormGroup(): FormGroup<{
     title: FormControl<string>;
     author: FormControl<string>;
@@ -89,13 +86,5 @@ export class LibraryComponent implements OnInit {
       publicationDate: ['', Validators.required],
       shelfLocation: ['', Validators.required]
     });
-  }
-
-  private loadBooks(): void {
-    this.store.loadBooks();
-  }
-
-  private init(): void {
-    this.loadBooks();
   }
 }

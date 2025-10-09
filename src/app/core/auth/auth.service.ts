@@ -11,6 +11,10 @@ const USERS_API_URL = 'http://localhost:3000/users';
 })
 export class AuthService {
   // Sygnał aktualnie zalogowanego użytkownika
+
+  // TODO: cała logika z przechowywaniem danych do wyniesienia do AuthStore. (patrz BooksStore)
+  // Serwis który ma HTTP to niech się tylko tym zajmuje, bez logiki
+  // Sama logika zawsze w storze aby nie robić tego w serwisach i komponentach.
   currentUser = signal<User | null>(null);
   // Sygnał obliczeniowy - czy ktoś jest zalogowany
   isLoggedIn = computed(() => !!this.currentUser());
@@ -21,12 +25,17 @@ export class AuthService {
 
   constructor() {
     // Na starcie serwisu od razu ładuje listę użytkowników z serwera
+
+    // TODO: wynieść do AuthStore i wywołać w onInit.
+    // jak będzie prawdziwy BE to nie będzie tego, BE załatwi to za nas
     this.loadInitialUsers();
   }
 
   // === METODY PUBLICZNE (API SERWISU) ===
   //   Rejestruje nowego użytkownika w systemie
   async register(username: string, password: string): Promise<boolean> {
+    // TODO: ta metoda powinna mieć tylko request http (patrz BooksService)
+
     // Sprawdzam, czy użytkownik o takiej nazwie już istnieje
     if (this.allUsers().some(u => u.username === username)) {
       console.error('Użytkownik o takiej nazwie już istnieje');
@@ -51,6 +60,9 @@ export class AuthService {
    // Loguje użytkownika do systemu. True jeśli logowanie się powiodło, false w przeciwnym razie
   async login(username: string, password: string): Promise<boolean> {
     // Przed każdą próbą logowania, odświeżam listę użytkowników z serwera, aby mieć pewność, że pracuje na aktualnych danych
+    // TODO tutaj można w store bezpośrednio to zrobić, w prawdziwym BE będzie request aby załatwił to za nas
+
+    // TODO: jak wywołamy to w store, to wystarczy top zrobić raz na init i przypisać do zmiennej aby nie wykonywać tego za każdym razem
     await this.loadInitialUsers();
 
     const user = this.allUsers().find(u => u.username === username && u.password === password);
@@ -65,6 +77,8 @@ export class AuthService {
 
    // Wylogowuje bieżącego użytkownika.
   logout(): void {
+    //TODO: jak w login()
+
     this.currentUser.set(null);
   }
   // === METODY PRYWATNE ===

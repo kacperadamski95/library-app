@@ -31,6 +31,7 @@ export class AppComponent {
   username = computed(() => this.authService.currentUser()?.username)
 
   logout() {
+    //TODO: po stworzeniu AuthStore, bezpośrednio wywoływać metoda ze store i można również wynieść tą nawigacje.
     this.authService.logout();
     this.router.navigate(['/login']);
   }
