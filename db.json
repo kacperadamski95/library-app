@@ -1,0 +1,77 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "Władca Pierścieni",
+      "author": "J.R.R. Tolkien",
+      "publicationDate": "1954",
+      "shelfLocation": "A1",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "2",
+      "title": "Diuna",
+      "author": "Frank Herbert",
+      "publicationDate": "1965",
+      "shelfLocation": "B3",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "0181",
+      "title": "Wiedźmin 1",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2001",
+      "shelfLocation": "C1",
+      "borrowedByUserId": "771b"
+    },
+    {
+      "id": "e26f",
+      "title": "Wiedźmin 2",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2003",
+      "shelfLocation": "C2",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "ec08",
+      "title": "Wiedźmin 3",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2005",
+      "shelfLocation": "C3",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "a0ec",
+      "title": "Wiedźmin 4",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2007",
+      "shelfLocation": "C4",
+      "borrowedByUserId": null
+    },
+    {
+      "id": "d935",
+      "title": "Wiedźmin 5",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2008",
+      "shelfLocation": "C5",
+      "borrowedByUserId": null
+    }
+  ],
+  "users": [
+    {
+      "id": "8fcc",
+      "username": "kacper adamski",
+      "password": "kacper"
+    },
+    {
+      "id": "771b",
+      "username": "adam malysz",
+      "password": "adam"
+    },
+    {
+      "id": "d3a5",
+      "username": "adam mickiewicz",
+      "password": "adam"
+    }
+  ]
+}

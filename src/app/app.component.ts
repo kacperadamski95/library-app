@@ -23,19 +23,15 @@ import { AuthService } from './core/auth/auth.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  // Używamy 'public', aby mieć dostęp do serwisu bezpośrednio w szablonie
-
   // inject lepiej zeby byly private i nie uzywac bezposrednio serwisow w template
-  // jak cos jest public nie musimy tego pisać, ponieważ domyślnie jest ustawiona na public
-  //public authService = inject(AuthService);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  // zamiast bezposrednio uzywac serwisu w template, przypisac wartosc do zmiennej w komponencie
   isLoggedIn = this.authService.isLoggedIn;
   username = computed(() => this.authService.currentUser()?.username)
 
   logout() {
+    //TODO: po stworzeniu AuthStore, bezpośrednio wywoływać metoda ze store i można również wynieść tą nawigacje.
     this.authService.logout();
     this.router.navigate(['/login']);
   }
