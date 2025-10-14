@@ -6,7 +6,7 @@
       "author": "J.R.R. Tolkien",
       "publicationDate": "1954",
       "shelfLocation": "A1",
-      "borrowedByUserId": null
+      "borrowedByUserId": "771b"
     },
     {
       "id": "2",
@@ -14,7 +14,7 @@
       "author": "Frank Herbert",
       "publicationDate": "1965",
       "shelfLocation": "B3",
-      "borrowedByUserId": null
+      "borrowedByUserId": "8fcc"
     },
     {
       "id": "0181",
@@ -22,7 +22,7 @@
       "author": "Andrzej Sapkowski",
       "publicationDate": "2001",
       "shelfLocation": "C1",
-      "borrowedByUserId": "771b"
+      "borrowedByUserId": null
     },
     {
       "id": "e26f",
@@ -55,6 +55,14 @@
       "publicationDate": "2008",
       "shelfLocation": "C5",
       "borrowedByUserId": null
+    },
+    {
+      "id": "bdad",
+      "title": "Wiedźmin 6",
+      "author": "Andrzej Sapkowski",
+      "publicationDate": "2019",
+      "shelfLocation": "C6",
+      "borrowedByUserId": null
     }
   ],
   "users": [
@@ -72,6 +80,11 @@
       "id": "d3a5",
       "username": "adam mickiewicz",
       "password": "adam"
+    },
+    {
+      "id": "16f2",
+      "username": "kacper",
+      "password": "kacper"
     }
   ]
 }

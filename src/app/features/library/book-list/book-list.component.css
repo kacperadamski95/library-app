@@ -26,12 +26,12 @@
 .book-card-label {
   font-weight: 600;
   color: #6c757d;
-  padding-right: 1rem; /* Dodajemy odstęp, żeby tekst się nie zlewał */
+  padding-right: 1rem;
 }
 
 .book-card-value {
   text-align: right;
-  word-break: break-word; /* Zapobiega "wylewaniu się" długich tekstów */
+  word-break: break-word;
 }
 
 .book-actions {
@@ -41,14 +41,10 @@
   justify-content: flex-end;
 }
 
-/* Ukrywamy tradycyjną tabelę na małych ekranach */
 .books-table {
   display: none;
 }
 
-/* ================================================= */
-/* ===  WSPÓLNE, POPRAWIONE STYLE DLA PRZYCISKÓW === */
-/* ================================================= */
 .action-btn {
   padding: 0.5rem 1rem;
   margin: 0;
@@ -67,7 +63,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Tutaj przypisujemy konkretne kolory */
 .action-btn[data-action="borrow"] {
   background-color: var(--action-borrow-bg);
 }
@@ -77,9 +72,7 @@
 }
 
 
-/* Media Query dla tabletów i większych ekranów */
 @media (min-width: 768px) {
-  /* Pokazujemy tabelę, a ukrywamy układ karciany */
   .books-table {
     display: table;
     width: 100%;
@@ -91,7 +84,6 @@
     display: none;
   }
 
-  /* Style dla tabeli (te, które mieliśmy wcześniej) */
   .books-table th, .books-table td {
     border: 1px solid #ddd;
     padding: 0.75rem 1rem;
@@ -109,6 +101,5 @@
   }
 }
 
-/* Wspólne style dla statusów */
 .status-available { color: var(--action-return-bg); font-weight: bold; }
 .status-borrowed { color: var(--action-borrow-bg); font-weight: bold; }

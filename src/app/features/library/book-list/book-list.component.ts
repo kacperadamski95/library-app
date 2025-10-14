@@ -36,11 +36,9 @@ import { AuthService } from '../../../core/auth/auth.service';
                 }
               </td>
               <td>
-                <!-- Przycisk "Wypożycz" widoczny tylko, gdy książka jest dostępna -->
                 @if (!book.borrowedByUserId) {
                   <button class="action-btn" (click)="onBorrowClick(book.id)" data-action="borrow">Wypożycz</button>
                 }
-                <!-- Przycisk "Zwróć" widoczny tylko dla osoby, która wypożyczyła -->
                 @if (book.borrowedByUserId === currentUserId()) {
                   <button class="action-btn" (click)="onReturnClick(book.id)" data-action="return">Zwróć</button>
                 }
@@ -101,14 +99,6 @@ export class BookListComponent {
   currentUserId = input<string | null>(null);
   borrowOutput = output<string>();
   returnOutput = output<string>();
-
-  // TODO:
-  // Nie używamy serwisów http w komponencie jak korzystam ze store.
-  // Cała logika z przechowywaniem danych z AuthService do wyniesienia do store.
-  // wtedy tutaj zaciągamy tylko AuthStore i do zmiennej przypisujemy currentUserId
-  // Albo nawet lepiej (bo z tego co widzę jest to dumb component), można bezpośrednio tutaj przekazać przez input currentUserId
-  // Wtedy całkowicie pozbywamy się jakiejkolwiek logiki z tego komponentu, będzie on służył wyłącznie do wyświetlania danych
- // authService = inject(AuthService); // Potrzebny do sprawdzenia ID bieżącego użytkownika
 
   onBorrowClick(bookId: string) {
     this.borrowOutput.emit(bookId);

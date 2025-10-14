@@ -23,11 +23,11 @@ export class BookService {
     return this.http.post<void>(this.getBookApiUrl, book);
  }
 
- borrowBook(bookId: string, userId: string): Observable<void> {
-    return this.http.put<void>(`${this.getBookApiUrl}/${bookId}/borrow`, { borrowedByUserId: userId });
+  borrowBook(bookId: string, userId: string): Observable<Book> {
+    return this.http.patch<Book>(`${this.getBookApiUrl}/${bookId}`, { borrowedByUserId: userId });
   }
 
-  returnBook(bookId: string): Observable<void> {
-    return this.http.put<void>(`${this.getBookApiUrl}/${bookId}/return`, { borrowedByUserId: null });
+  returnBook(bookId: string): Observable<Book> {
+    return this.http.patch<Book>(`${this.getBookApiUrl}/${bookId}`, { borrowedByUserId: null });
   }
 }

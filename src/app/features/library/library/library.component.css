@@ -56,6 +56,6 @@ button[type="submit"]:hover {
 @media (min-width: 768px) {
   .library-container {
     gap: 2rem;
-    padding: 0; /* Usuwamy padding, bo kontener jest już wycentrowany */
+    padding: 0;
   }
 }

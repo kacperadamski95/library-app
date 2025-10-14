@@ -1,6 +1,7 @@
 import {Component, computed, inject} from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './core/auth/auth.service';
+import { AuthStore } from './store/auth/auth.store';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { AuthService } from './core/auth/auth.service';
     <header>
       <h1>Moja Biblioteka</h1>
       <nav>
-        @if (isLoggedIn()) {
+        @if (authStore.isLoggedIn()) {
           <p>Witaj, {{ username() }}!</p>
           <button (click)="logout()">Wyloguj</button>
         }
@@ -23,16 +24,10 @@ import { AuthService } from './core/auth/auth.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  // inject lepiej zeby byly private i nie uzywac bezposrednio serwisow w template
-  private authService = inject(AuthService);
-  private router = inject(Router);
-
-  isLoggedIn = this.authService.isLoggedIn;
-  username = computed(() => this.authService.currentUser()?.username)
+  readonly authStore = inject(AuthStore);
+  readonly username = computed(() => this.authStore.currentUser()?.username)
 
   logout() {
-    //TODO: po stworzeniu AuthStore, bezpośrednio wywoływać metoda ze store i można również wynieść tą nawigacje.
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.authStore.logout()
   }
 }

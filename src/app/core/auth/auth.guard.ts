@@ -1,14 +1,13 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { AuthService } from './auth.service';
+import { AuthStore } from '../../store/auth/auth.store';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  const authService = inject(AuthService);
+  const authStore = inject(AuthStore);
   const router = inject(Router);
 
-  if (authService.isLoggedIn()) {
+  if (authStore.isLoggedIn()) {
     return true;
   }
-  // Użytkownik nie jest zalogowany, przekierowujemy go do strony logowania
   return router.parseUrl('/login');
 };

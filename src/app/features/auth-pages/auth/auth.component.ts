@@ -1,9 +1,9 @@
 import {Component, inject, Signal} from '@angular/core';
 import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ActivatedRoute, Router, RouterLink, UrlSegment} from '@angular/router';
-import { AuthService } from '../../../core/auth/auth.service';
+import {ActivatedRoute, RouterLink } from '@angular/router';
 import {map} from 'rxjs';
 import {toSignal} from '@angular/core/rxjs-interop';
+import {AuthStore} from '../../../store/auth/auth.store';
 
 @Component({
   selector: 'app-auth',
@@ -39,10 +39,9 @@ import {toSignal} from '@angular/core/rxjs-interop';
   styleUrl: './auth.component.css'
 })
 export class AuthComponent {
-  private authService = inject(AuthService);
-  private router = inject(Router);
   private fb = inject(NonNullableFormBuilder)
   private route = inject(ActivatedRoute);
+  private authStore = inject(AuthStore)
 
 
   isLoginView: Signal<boolean> = toSignal(
@@ -57,37 +56,16 @@ export class AuthComponent {
     password: ['', Validators.required]
   })
 
-  async onSubmit() {
-    this.errorMessage = null;
+  onSubmit(): void {
     if (this.authFormGroup.invalid) {
       return;
     }
-    const { username, password } = this.authFormGroup.getRawValue();
-    let success = false;
+    const credentials = this.authFormGroup.getRawValue();
 
-    try { if (this.isLoginView()) {
-      // --- LOGIKA LOGOWANIA ---
-      success = await this.authService.login(username, password);
-      if (!success) {
-        this.errorMessage = 'Nieprawidłowa nazwa użytkownika lub hasło.';
-      }
+    if (this.isLoginView()) {
+      this.authStore.login(credentials);
     } else {
-      // --- LOGIKA REJESTRACJI ---
-      success = await this.authService.register(username, password);
-      if (success) {
-        // Automatyczne logowanie po udanej rejestracji
-        await this.authService.login(username, password);
-      } else {
-        this.errorMessage = 'Użytkownik o tej nazwie już istnieje.';
-      }
-    }
-
-    if (success) {
-      this.router.navigate(['/library']);
-    }
-  } catch (error) {
-      console.error('Wystąpił  błąd podczas uwierzytelniania.:', error);
-      this.errorMessage = 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie.';
+      this.authStore.register(credentials);
     }
   }
 }

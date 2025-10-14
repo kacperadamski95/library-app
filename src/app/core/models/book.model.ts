@@ -4,6 +4,6 @@ export interface Book {
   author: string;
   publicationDate: string;
   shelfLocation: string;
-//   ? ponieważ książka nie zawsze jest wypożyczona
+// ?ponieważ książka nie zawsze jest wypożyczona
   borrowedByUserId?: string | null;
 }

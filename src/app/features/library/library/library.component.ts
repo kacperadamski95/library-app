@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookListComponent } from '../book-list/book-list.component';
-import { AuthService } from '../../../core/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { BooksStore } from '../../../store/books/books.store';
+import { AuthStore } from '../../../store/auth/auth.store';
 
 @Component({
   selector: 'app-library',
@@ -26,13 +26,14 @@ import { BooksStore } from '../../../store/books/books.store';
       <section class="book-list-section">
         <h3>Książki w bibliotece</h3>
 
-        @if (isLoading()) {
+        @if (booksStore.isLoading() && booksStore.books().length === 0) {
           <p>Ładowanie książek...</p>
-        } @else if (error()) {
-          <p class="error-message">{{ error() }}</p>
+        } @else if (booksStore.error()) {
+          <p class="error-message">{{ booksStore.error() }}</p>
         } @else {
           <app-book-list
-            [booksSignal]="books()"
+            [booksSignal]="booksStore.books()"
+            [currentUserId]="authStore.currentUser()?.id ?? null"
             (borrowOutput)="onBorrowBook($event)"
             (returnOutput)="onReturnBook($event)">
           </app-book-list>
@@ -42,14 +43,19 @@ import { BooksStore } from '../../../store/books/books.store';
   `,
   styleUrl: './library.component.css'
 })
-export class LibraryComponent {
-  private booksStore = inject(BooksStore);
-  private authService = inject(AuthService);
+export class LibraryComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);
+  readonly booksStore = inject(BooksStore);
+  readonly authStore = inject(AuthStore)
 
-  books = this.booksStore.books;
-  isLoading = this.booksStore.isLoading;
-  error = this.booksStore.error;
+  ngOnInit() {
+    if (this.newBookFormGroup.invalid) {
+      return;
+    }
+    const bookData = this.newBookFormGroup.getRawValue();
+    this.booksStore.addBook({ bookData });
+    this.newBookFormGroup.reset();
+  }
 
   newBookFormGroup = this.createFormGroup();
 
@@ -61,9 +67,9 @@ export class LibraryComponent {
     this.newBookFormGroup.reset();
   }
 
+
   onBorrowBook(bookId: string): void {
-    // TODO: To do wyniesienia do authStore.
-    const userId = this.authService.currentUser()?.id;
+    const userId = this.authStore.currentUser()?.id;
 
     if (userId) {
       this.booksStore.borrowBook({bookId, userId});

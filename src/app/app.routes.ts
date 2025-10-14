@@ -4,7 +4,6 @@ import { authGuard } from './core/auth/auth.guard';
 export const routes: Routes = [
   {
     path: 'login',
-    // Używamy dynamicznego importu do leniwego ładowania komponentu
     loadComponent: () => import('./features/auth-pages/auth/auth.component').then(c => c.AuthComponent),
   },
   {
@@ -14,15 +13,13 @@ export const routes: Routes = [
   {
     path: 'library',
     loadComponent: () => import('./features/library/library/library.component').then(c => c.LibraryComponent),
-    canActivate: [authGuard], // Tutaj dodajemy naszego strażnika!
+    canActivate: [authGuard],
   },
-  // Domyślne przekierowanie
   {
     path: '',
     redirectTo: '/library',
     pathMatch: 'full'
   },
-  // Przekierowanie "dzikich" ścieżek
   {
     path: '**',
     redirectTo: '/library'
