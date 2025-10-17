@@ -2,7 +2,7 @@ import { computed, inject } from '@angular/core';
 import {patchState, signalStore, withComputed, withHooks, withMethods, withProps, withState} from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import {map, pipe, switchMap, tap } from 'rxjs';
-import { Book } from '../../core/models/book.model';
+import { Book } from '../../models/book.model';
 import {BookService} from '../../services/books.service'
 import {tapResponse} from '@ngrx/operators';
 
@@ -28,7 +28,6 @@ export const BooksStore = signalStore(
     booksCount: computed(() => books().length),
   })),
   withMethods((store) => ({
-
     loadBooks: rxMethod<void>(
       pipe(
         tap(() => patchState(store, { isLoading: true })),

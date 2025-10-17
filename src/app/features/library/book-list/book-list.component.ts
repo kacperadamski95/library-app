@@ -1,6 +1,6 @@
 import {Component, inject, input, output} from '@angular/core';
 import { Book } from '../../../core/models/book.model';
-import { AuthService } from '../../../core/auth/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-book-list',
@@ -89,7 +89,6 @@ import { AuthService } from '../../../core/auth/auth.service';
         }
       </div>
     }
-
   `,
   styleUrl: './book-list.component.css'
 })

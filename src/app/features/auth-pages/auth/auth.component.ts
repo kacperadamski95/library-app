@@ -3,7 +3,7 @@ import {NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/
 import {ActivatedRoute, RouterLink } from '@angular/router';
 import {map} from 'rxjs';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {AuthStore} from '../../../store/auth/auth.store';
+import {AuthStore} from '../../../core/store/auth/auth.store';
 
 @Component({
   selector: 'app-auth',
@@ -16,17 +16,21 @@ import {AuthStore} from '../../../store/auth/auth.store';
           <label for="username">Nazwa użytkownika</label>
           <input id="username" type="text" formControlName="username" name="username">
         </div>
+
         <div class="form-group">
           <label for="password">Hasło</label>
           <input id="password" type="password" formControlName="password" name="password">
         </div>
-        @if (errorMessage) {
-          <p class="error-message">{{ errorMessage }}</p>
+
+        @if (authStore.error(); as err) {
+          <p class="error-message">{{ err }}</p>
         }
+
         <button type="submit" [disabled]="authFormGroup.invalid">
           {{ isLoginView() ? 'Zaloguj' : 'Zarejestruj' }}
         </button>
       </form>
+
       <p>
         {{ isLoginView() ? 'Nie masz konta?' : 'Masz już konto?' }}
         <a [routerLink]="isLoginView() ? '/register' : '/login'">
@@ -34,22 +38,19 @@ import {AuthStore} from '../../../store/auth/auth.store';
         </a>
       </p>
     </div>
-
   `,
   styleUrl: './auth.component.css'
 })
 export class AuthComponent {
+  protected readonly authStore = inject(AuthStore);
+
   private fb = inject(NonNullableFormBuilder)
   private route = inject(ActivatedRoute);
-  private authStore = inject(AuthStore)
-
 
   isLoginView: Signal<boolean> = toSignal(
     this.route.url.pipe(map(segments => segments[0]?.path === 'login')),
     { initialValue: true }
   )
-
-  errorMessage: string | null = null;
 
   authFormGroup = this.fb.group({
     username: ['', Validators.required],
@@ -57,9 +58,8 @@ export class AuthComponent {
   })
 
   onSubmit(): void {
-    if (this.authFormGroup.invalid) {
-      return;
-    }
+    if (this.authFormGroup.invalid) return;
+
     const credentials = this.authFormGroup.getRawValue();
 
     if (this.isLoginView()) {

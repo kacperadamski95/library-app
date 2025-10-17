@@ -2,8 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookListComponent } from '../book-list/book-list.component';
 import { CommonModule } from '@angular/common';
-import { BooksStore } from '../../../store/books/books.store';
-import { AuthStore } from '../../../store/auth/auth.store';
+import { BooksStore } from '../../../core/store/books/books.store';
+import { AuthStore } from '../../../core/store/auth/auth.store';
 
 @Component({
   selector: 'app-library',
@@ -12,6 +12,7 @@ import { AuthStore } from '../../../store/auth/auth.store';
     <div class="library-container">
       <section class="add-book-section">
         <h3>Dodaj nową książkę</h3>
+
         <form [formGroup]="newBookFormGroup" (ngSubmit)="onAddBookSubmit()">
           <div class="form-grid">
             <input type="text" formControlName="title" placeholder="Tytuł">
@@ -49,9 +50,8 @@ export class LibraryComponent implements OnInit {
   readonly authStore = inject(AuthStore)
 
   ngOnInit() {
-    if (this.newBookFormGroup.invalid) {
-      return;
-    }
+    if (this.newBookFormGroup.invalid) return;
+
     const bookData = this.newBookFormGroup.getRawValue();
     this.booksStore.addBook({ bookData });
     this.newBookFormGroup.reset();
@@ -67,9 +67,8 @@ export class LibraryComponent implements OnInit {
     this.newBookFormGroup.reset();
   }
 
-
   onBorrowBook(bookId: string): void {
-    const userId = this.authStore.currentUser()?.id;
+    const userId = this.authStore.userId();
 
     if (userId) {
       this.booksStore.borrowBook({bookId, userId});

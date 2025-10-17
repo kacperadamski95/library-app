@@ -13,6 +13,7 @@ const API_URL = 'http://localhost:3000';
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
+
   register(userData: Credentials):Observable<User> {
     return this.http.post<User>(`${API_URL}/users`, userData);
   }

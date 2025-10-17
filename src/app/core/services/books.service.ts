@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Book} from '../core/models/book.model';
+import {Book} from '../models/book.model';
 import {HttpClient} from '@angular/common/http';
 
 const API_URL = 'http://localhost:3000';

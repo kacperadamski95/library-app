@@ -1,7 +1,7 @@
 import {Component, computed, inject} from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from './core/auth/auth.service';
-import { AuthStore } from './store/auth/auth.store';
+import { AuthService } from './core/services/auth.service';
+import { AuthStore } from './core/store/auth/auth.store';
 
 @Component({
   selector: 'app-root',
@@ -9,23 +9,23 @@ import { AuthStore } from './store/auth/auth.store';
   template: `
     <header>
       <h1>Moja Biblioteka</h1>
+
       <nav>
         @if (authStore.isLoggedIn()) {
-          <p>Witaj, {{ username() }}!</p>
+          <p>Witaj, {{ authStore.username() }}!</p>
           <button (click)="logout()">Wyloguj</button>
         }
       </nav>
     </header>
 
     <main>
-      <router-outlet></router-outlet>
+      <router-outlet />
     </main>
   `,
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  readonly authStore = inject(AuthStore);
-  readonly username = computed(() => this.authStore.currentUser()?.username)
+  protected readonly authStore = inject(AuthStore);
 
   logout() {
     this.authStore.logout()
